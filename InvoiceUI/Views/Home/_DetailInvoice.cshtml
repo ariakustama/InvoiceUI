@@ -1,0 +1,38 @@
+﻿@model InvoiceUI.ViewModel.InvoiceDetailViewModel
+@using InvoiceUI.Extentions
+
+@{ 
+    decimal amount = Model.InvoiceDetailQty * Model.InvoiceDetailRate;
+}
+
+<tr>
+    <td>
+        <textarea class="summernote nameDetailSave" readonly>@Model.InvoiceDetailName</textarea>
+    </td>
+    <td>
+        <input class="form-control txtRight NumberInput qtyDetailSave" readonly autocomplete="off" width:100%;" value="@Model.InvoiceDetailQty.ToComma()" />
+    </td>
+    <td>
+        <input class="form-control txtRight NumberInput rateDetailSave" readonly autocomplete="off" width:100%;" value="@Model.InvoiceDetailRate.ToComma()" />
+    </td>
+    <td>
+        <input class="form-control uomNameDetailSave" readonly autocomplete="off" width:100%;" value="@Model.UomName" />
+        <input type="hidden" class="uomIdDetailSave" value="@Model.UomId" />
+    </td>
+    <td>
+        <input class="form-control txtRight NumberInput amountDetail" readonly autocomplete="off" width:100%;" value="@amount.ToComma()" />
+        <input type="hidden" value="" class="deleteAt" />
+    </td>
+    <td>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul class="dropdown-menu" style="">
+                <li><a class="dropdown-item editDetail">Edit</a></li>
+                <li><a class="dropdown-item deleteDetail">Delete</a></li>
+            </ul>
+        </div>
+
+        <button type="button" class="btn btn-block bg-gradient-primary saveEdit" style="display:none;">Save</button>
+    </td>
+</tr>

@@ -1,0 +1,829 @@
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .rowBorder {
+        padding-top: 1%;
+        padding-bottom: 1%;
+        border-bottom: solid rgba(0,0,0,.125);
+    }
+
+    .btn-cleartext {
+        float: right;
+    }
+
+    .txtRight {
+        text-align: right;
+    }
+</style>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><span class="right badge badge-success">PAID</span> Bill</h3>
+                        <button type="button" id="btnDeleteInvoice" class="btn btn-danger float-right">Delete</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="callout callout-info" style="width:70%;">
+                                    <h5><i class="fas fa-info"></i> Note:</h5>
+                                    Please find attached your invoice. Thank you for timely payment.
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card-tools float-right">
+                                    <img class="profile-user-img img-fluid" id="imgLoggoCustomer" style="width:200px" src="" alt="User profile picture">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row rowBorder">
+                            <div class="col-2">
+                                <div class="float-left">
+                                    Invoice No
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far" style="font-weight: bold;">#</i>
+                                            </span>
+                                        </div>
+                                        <input type="text" id="invoiceNumber" readonly class="form-control" />
+                                        <input type="hidden" id="invoiceId" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-10">
+                                <div class="float-right">
+                                    Language
+                                    <select id="ddlLanguage" class="form-control select2">
+                                        <option value="" selected>Please Choose</option>
+                                    </select>
+                                </div>
+                                <div class="float-right" style="margin-right: 2%;">
+                                    Currency
+                                    <select id="ddlCurrency" class="form-control select2">
+                                        <option value="" selected>Please Choose</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row rowBorder">
+                            <div class="col-md-12">
+                                <div class="form-group row" style="margin-bottom: 0px;">
+                                    <div class="col-md-6" style="">
+                                        <div class="form-group row" style="margin-bottom:0px">
+                                            <div class="col-md-12">
+                                                From
+                                                <button type="button" class="btn btn-tool btn-cleartext" title="Clear Text Area">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                                <textarea id="textAreaFrom" autocomplete="off" class="form-control" style="resize:none;overflow:auto;width:100%" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-12">
+                                                To
+                                                <select id="ddlCustomer" class="form-control select2">
+                                                    <option value="" selected>Please Choose</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-12">
+                                                <textarea readonly id="textAreaCustomerAddress" autocomplete="off" class="form-control" style="resize:none;overflow:auto;width:100%" rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <div class="col-md-12">
+                                                Date
+                                                <div class="input-group date datepicker" id="date" data-target-input="nearest">
+                                                    <input type="text" id="txtBoxDate" placeholder="yyyy-MM-dd" class="form-control datetimepicker-input" data-target="#date" />
+                                                    <div class="input-group-append" data-target="#date" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-12">
+                                                Invoice Date
+                                                <div class="input-group date datepicker" id="invoiceDate" data-target-input="nearest">
+                                                    <input type="text" id="txtBoxinvoiceDate" placeholder="yyyy-MM-dd" class="form-control datetimepicker-input" data-target="#invoiceDate" />
+                                                    <div class="input-group-append" data-target="#invoiceDate" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-12">
+                                                Purchase Order Number
+                                                <div class="input-group" id="divpo" style="cursor:pointer;">
+                                                    <input id="purchaseOrderNumber" readonly type="text" class="form-control" />
+                                                    <input id="purchaseOrderId" type="hidden" />
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text"><i class="fa fa-search"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row rowBorder">
+                            <div class="col-md-12">
+                                <table id="tableHeadearinvoiceTable" style="float: left;table-layout:fixed;word-wrap:break-word" class="datatable table table-hover table-bordered">
+                                    <thead class="bordered-blueberry">
+                                        <tr>
+
+                                            <th style="width: 50%"><label>Name</label></th>
+                                            <th style="width: 8%"><label>Quantity</label></th>
+                                            <th style="width: 8%"><label>Rate</label></th>
+                                            <th style="width: 15%"><label>Uom</label></th>
+                                            <th style="width: 10%"><label>Amount</label></th>
+                                            <th style="width: 5%"><label>Action</label></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <textarea class="summernote" id="detailName">
+                                                        Place <em>some</em> <u>text</u> <strong>here</strong>
+                                                    </textarea>
+                                            </td>
+                                            <td>
+                                                <input class="form-control txtRight NumberInput" id="detailQty" autocomplete="off" width:100%;" value="0" />
+                                            </td>
+                                            <td>
+                                                <input class="form-control txtRight NumberInput" id="detailRate" autocomplete="off" width:100%;" value="0" />
+                                            </td>
+                                            <td>
+                                                <select id="detailUom" class="form-control select2">
+                                                    <option value="" selected>Please Choose</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input class="form-control txtRight NumberInput" id="detailAmount" readonly autocomplete="off" width:100%;" />
+                                            </td>
+                                            <td><button type="button" class="btn btn-block bg-gradient-primary" id="btnAddDetail">Add</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row rowBorder">
+                        <div class="col-md-12">
+                            <div class="form-group row" style="margin-bottom: 0px;">
+                                <div class="col-md-8">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <th style="width:70%">Subtotal:</th>
+                                                    <td style="width:5%" id="tdCurencySubtotal" class="txtRight needCodeCurrency"></td>
+                                                    <td style="width:25%" id="tdAmountSubtotal" class="txtRight">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="width:70%">Tax (%)<input class="form-control txtRight NumberInput float-right" id="percenTax" autocomplete="off" style="width:20%;" maxlength="2" value="0"></th>
+                                                    <td style="width:5%" id="tdCurencyTax" class="txtRight needCodeCurrency"></td>
+                                                    <td style="width:25%" id="tdAmountTax" class="txtRight">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="width:70%">Total:</th>
+                                                    <td style="width:5%" id="tdCurencyTotal" class="txtRight needCodeCurrency"></td>
+                                                    <td style="width:25%" id="tdAmountTotal" class="txtRight">0</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="button" id="btnBack" class="btn btn-default backHome">Back</button>
+                    <button type="button" id="btnSubmitInvoice" class="btn btn-primary float-right">Submit</button>
+                </div>
+                <!-- /.card-footer-->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-search-po">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Search Purchase Order</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="tableHeadearpoTable" style="float: left;table-layout:fixed;word-wrap:break-word" class="datatable table table-hover table-bordered">
+                        <thead class="bordered-blueberry">
+                            <tr>
+
+                                <th style="width: 25%"><label>Purchase Order No.</label></th>
+                                <th style="width: 25%"><label>Amount</label></th>
+                                <th style="width: 25%"><label>Pic</label></th>
+                                <th style="width: 25%"><label></label></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input id="poNumberSearch" class="form-control" autocomplete="off" style="width:100%;" />
+                                </td>
+                                <td></td>
+                                <td>
+                                    <input id="poPicSerach" class="form-control" autocomplete="off" style="width:100%;" />
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table id="poTable" class="table table-bordered table-hover"></table>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modal-success-update">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="nav-icon fas fa-check backHome"></i> Success Update</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="bodymodal-success-update">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default backHome" data-dismiss="modal">Back To Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var tablePo_PopUp;
+    var CurrentDate = new Date();
+    var stringCurrenDate = getDateToString(CurrentDate);
+
+    $("#ddlLanguage").append(@Html.Raw(ViewBag.Language));
+    $("#ddlCurrency").append(@Html.Raw(ViewBag.Currency));
+    $("#detailUom").append(@Html.Raw(ViewBag.Uom));
+    $("#ddlCustomer").append(@Html.Raw(ViewBag.Customer));
+    
+
+    $(document).ready(function () {
+
+        $('.datepicker').datetimepicker({
+            todayHighlight: true,
+            format: 'yyyy-MM-DD',
+            autoclose: true
+        });
+
+        $('.select2').select2();
+        $('.summernote').summernote();
+
+        tablePo_PopUp = $('#poTable').dataTable({
+            paging: true,
+            lengthChange: false,
+            searching: false,
+            ordering: false,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            language: {
+                processing: '<div class="spinner spinner-lg"></div>',
+                "zeroRecords": "No data available in table"
+            },
+            ajax: {
+                data: function (param) {
+                    param.param = JSON.stringify({
+                        PurchaseOrderCode: $("#poNumberSearch").val(),
+                        PurchaseOrderPic: $("#poPicSerach").val(),
+                    })
+                },
+                "url": "/Home/DataTablePopUp/",
+            },
+            columns:
+                [
+                    {
+                        name: 'PurchaseOrderNumber',
+                        data: 'purchaseOrderNumber',
+                        width: "25%",
+                        sortable: false,
+                        searchable: false,
+                        defaultContent: '-',
+                    },
+                    {
+                        name: 'Amount',
+                        data: 'amount',
+                        width: "25%",
+                        sortable: false,
+                        searchable: false,
+                        className: "txtRight",
+                        "render": function (data, type, row, full, meta) {
+                            return '<span data-toggle="tooltip" data-placement="left">' + addCommas(data) + '</span>'
+                        }
+                    },
+                    {
+                        name: 'PIC',
+                        data: 'pic',
+                        width: "25%",
+                        sortable: false,
+                        searchable: false,
+                        "render": function (data, type, row, full, meta) {
+                            var picName = "";
+                            if (data != null && data.length > 17) {
+                                picName = data.substring(0, 17) + "...";
+                            }
+                            else {
+                                picName = data;
+                            }
+                            return '<span data-toggle="tooltip" data-placement="left" title="' + data + '">' + picName + '</span>'
+                        }
+                    },
+                    {
+                        data: 'id',
+                        sortable: false,
+                        searchable: false,
+                        width: "25%",
+                        "render": function (data, type, row, full, meta) {
+                            return '<button type="button" class="btn btn-block bg-gradient-primary btnGetPO" data-id="' + data + '" data-number="' + row.purchaseOrderNumber + '">Select</button>';
+                        }
+                    }
+                ],
+            "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                $(nRow).attr('data-id', aData.id);
+                $(nRow).addClass('tr-' + aData.color);
+            },
+        });
+
+        $.blockUI();
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/getInvoiceId",
+            data: {
+                "id": "@ViewBag.Id"
+            },
+            success: function (data) {
+                $.unblockUI();
+                if (data.error) {
+                    toastr.error('Failed Get Invoice Data');
+                    console.error(data.errorMsg);
+                    return false;
+                }
+
+                $("#invoiceNumber").val(data.dataHeader.invoiceNumber);
+                $("#invoiceId").val(data.dataHeader.id);
+                $("#purchaseOrderId").val(data.dataHeader.purchaseOrderId);
+                $("#purchaseOrderNumber").val(data.dataHeader.purchaseOrderNumber);
+                $("#textAreaFrom").val(data.dataHeader.invoiceFrom);
+
+                $("#ddlCustomer").val(data.dataHeader.customerId).trigger("change");
+                $("#ddlCurrency").val(data.dataHeader.currencyId).trigger("change");
+                $("#ddlLanguage").val(data.dataHeader.languageId).trigger("change");
+
+                $("#txtBoxDate").val(data.dataHeader.invoiceDate.split('T')[0]);
+                $("#txtBoxinvoiceDate").val(data.dataHeader.invoiceDue.split('T')[0]);
+
+                $("#percenTax").val(data.dataHeader.invoiceDisc);
+
+                $('#tableHeadearinvoiceTable > tbody').append(data.dataDetail);
+                $('.summernote').summernote();
+                $('.select2').select2();
+                recountTotal();
+            },
+            error: function (data) {
+                toastr.error('Failed Get Customer Data');
+            }
+        });
+
+        $("#ddlLanguage").change(function () {
+
+        });
+
+        $("#ddlCurrency").change(function () {
+            var value = $(this).val();
+            if (value == "") {
+                $(".needCodeCurrency").text("");
+            }
+            else {
+                var codeCurrency = $('option:selected', this).attr('code');
+                $(".needCodeCurrency").text(codeCurrency);
+            }
+        });
+
+        $("#ddlCustomer").change(function () {
+            var id = $(this).val();
+            if (id == "") {
+                $("#imgLoggoCustomer").attr("src", "");
+                $("#textAreaCustomerAddress").text("");
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/getDataCustomerById",
+                    data: {
+                        "id": id
+                    },
+                    success: function (data) {
+                        if (data.error) {
+                            toastr.error('Failed Get Customer Data');
+                            console.error(data.errorMsg);
+                            return false;
+                        }
+                        $("#imgLoggoCustomer").attr("src", data.customerLogo);
+                        $("#textAreaCustomerAddress").text(data.customerAddress);
+                    },
+                    error: function (data) {
+                        toastr.error('Failed Get Customer Data');
+                    }
+                });
+            }
+        });
+
+        $("#divpo").click(function () {
+            $("#modal-search-po").modal("toggle");
+        });
+
+        $(".btn-cleartext").click(function () {
+            $("#textAreaFrom").text("");
+        });
+
+        $("#detailQty").blur(function () {
+            if ($(this).val() == "") {
+                $(this).val("0");
+            }
+            var rate = parseFloat($("#detailRate").val().replace(/,/g, ''));
+            var Qty = parseFloat($(this).val().replace(/,/g, ''));
+            countAmountDetail(Qty, rate, $(this).parent().next().next().next().children());
+
+            $(this).val(addCommas(Qty));
+        });
+
+        $("#detailRate").blur(function () {
+            if ($(this).val() == "") {
+                $(this).val("0");
+            }
+            var rate = parseFloat($(this).val().replace(/,/g, ''));
+            var Qty = parseFloat($("#detailQty").val().replace(/,/g, ''));
+            countAmountDetail(Qty, rate, $(this).parent().next().next().children());
+
+            $(this).val(addCommas(rate));
+        });
+
+        $("#percenTax").blur(function () {
+            var subTotal = parseFloat($("#tdAmountSubtotal").text().replace(/,/g, ''));
+            var tax = parseFloat($(this).val().replace(/,/g, ''));
+
+            countAmountTax(subTotal, tax);
+        });
+
+        $("#btnAddDetail").click(function (event) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/AddNewDetail",
+                data: {
+                    "detailName": $("#detailName").text(),
+                    "qty": $("#detailQty").val(),
+                    "rate": $("#detailRate").val(),
+                    "amount": $("#detailName").val(),
+                    "uomId": $("#detailUom").val(),
+                    "uomName": $("#detailUom option:selected").text(),
+                    "invId": ""
+                },
+                success: function (data) {
+                    if (data.error) {
+                        toastr.error('Failed Add Detail Invoice');
+                        console.error(data.errorMsg);
+                        return false;
+                    }
+                    $('#tableHeadearinvoiceTable > tbody').append(data.dataDetai);
+                    $('.summernote').summernote();
+                    $("#detailQty").val("0");
+                    $("#detailRate").val("0");
+                    $("#detailAmount").val("0");
+                    $("#detailUom").val("").select2();
+
+                    recountTotal();
+                },
+                error: function (data) {
+                    toastr.error('Failed Get Customer Data');
+                }
+            });
+        });
+
+        $(".backHome").click(function () {
+            window.location.replace("/Home/")
+        });
+
+        $("#btnSubmitInvoice").click(function () {
+            var listinvoiceDetails = [];
+            $('#tableHeadearinvoiceTable tr').each(function () {
+                if (typeof $(this).find(".amountDetail").val() === "undefined") {
+
+                }
+                else {
+                    var idDetail = null;
+                    if (typeof $(this).find(".rowdetailId").val() === "undefined")
+                    {
+                        idDetail = null
+                    }
+                    else {
+                        idDetail = $(this).find(".rowdetailId").val()
+                    }
+                    var InvoiceDetailViewModel = {
+                        Id: idDetail,
+                        InvoiceId: $("#invoiceId").val(),
+                        UomId: $(this).find(".uomIdDetailSave").val(),
+                        UomName: $(this).find(".uomNameDetailSave").val(),
+                        InvoiceDetailName: $(this).find(".nameDetailSave").text(),
+                        InvoiceDetailRate: parseFloat($(this).find(".rateDetailSave").val().replace(/,/g, '')),
+                        InvoiceDetailQty: parseFloat($(this).find(".qtyDetailSave").val().replace(/,/g, '')),
+                        AddDate: stringCurrenDate,
+                        EditDate: stringCurrenDate,
+                        DeletedAt: $(this).find(".deleteAt").val() == "" ? null : stringCurrenDate,
+                    };
+
+                    listinvoiceDetails.push(InvoiceDetailViewModel)
+                }
+            });
+            var InvoiceViewModel = {
+                Id: $("#invoiceId").val(),
+                InvoiceNumber: $("#invoiceNumber").val(),
+                PurchaseOrderId: $("#purchaseOrderId").val(),
+                CustomerId: $("#ddlCustomer").val(),
+                CurrencyId: $("#ddlCurrency").val(),
+                LanguageId: $("#ddlLanguage").val(),
+                PurchaseOrderNumber: $("#purchaseOrderNumber").val(),
+                CustomerName: $("#ddlCustomer option:selected").text(),
+                InvoiceDate: $("#txtBoxDate").val(),
+                InvoiceDue: $("#txtBoxinvoiceDate").val(),
+                InvoiceFrom: $("#textAreaFrom").val(),
+                InvoiceDisc: parseFloat($("#percenTax").val()),
+                AddDate: stringCurrenDate,
+                EditDate: stringCurrenDate,
+                DeletedAt: null,
+                invoiceDetails: listinvoiceDetails
+            };
+
+            if (listinvoiceDetails.length == 0) {
+                toastr.warning('Detail Invoice is Required');
+                return;
+            }
+
+            console.log(JSON.stringify(InvoiceViewModel));
+            //return;
+
+            $.blockUI();
+            $.ajax({
+                type: "POST",
+                url: "/Home/updateInvoice",
+                contentType: "application/json",
+                data: JSON.stringify(InvoiceViewModel),
+                success: function (data) {
+                    $.unblockUI();
+                    if (data.error) {
+                        toastr.error('Failed Submit Invoice');
+                        console.error(data.errorMsg);
+                        return false;
+                    }
+                    $("#modal-success-update").modal("toggle");
+                    $("#bodymodal-success-update").html("Invoice Number : " + data.data.invoiceNumber);
+                    toastr.success('Success Submit Invoice');
+                },
+                error: function (data) {
+                    toastr.error('Failed Get Customer Data');
+                }
+            });
+        });
+    });
+
+    $(document).on('click', '.btnGetPO', function () {
+        $("#modal-search-po").modal("toggle");
+        $("#purchaseOrderId").val($(this).data('id'));
+        $("#purchaseOrderNumber").val($(this).data('number'));
+    });
+
+    $(document).on('keydown', '.NumberInput', function () {
+        if (event.shiftKey) {
+            event.preventDefault();
+        }
+
+        if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 190) {
+        }
+        else {
+            if (event.keyCode < 95) {
+                if (event.keyCode < 48 || event.keyCode > 57) {
+                    event.preventDefault();
+                }
+            }
+            else {
+                if (event.keyCode < 96 || event.keyCode > 105) {
+                    event.preventDefault();
+                }
+            }
+        }
+    });
+
+    $(document).on('click', '.editDetail', function () {
+        $(this).closest('div').next().show();
+        $(this).closest('div').hide();
+
+        var thisTr = $(this).closest('tr');
+        thisTr.find(".rateDetailSave").attr("readonly", false);
+        thisTr.find(".qtyDetailSave").attr("readonly", false);
+
+        thisTr.find(".uomNameDetailSave").hide();
+        thisTr.find(".uomNameDetailSave").parent().append('<select class="form-control select2 uomDetailSave">' + $("#detailUom").html() + '</select>');
+        thisTr.find(".uomDetailSave").val(thisTr.find(".uomIdDetailSave").val()).trigger("change")
+        thisTr.find(".uomDetailSave").select2();
+    });
+
+    $(document).on('blur', '.qtyDetailSave', function () {
+        if ($(this).val() == "") {
+            $(this).val("0");
+        }
+        var rate = parseFloat($(this).parent().next().children().val().replace(/,/g, ''));
+        var Qty = parseFloat($(this).val().replace(/,/g, ''));
+        countAmountDetail(Qty, rate, $(this).parent().next().next().next().children());
+
+        $(this).val(addCommas(Qty));
+    });
+
+    $(document).on('blur', '.rateDetailSave', function () {
+        if ($(this).val() == "") {
+            $(this).val("0");
+        }
+        var rate = parseFloat($(this).val().replace(/,/g, ''));
+        var Qty = parseFloat($(this).parent().prev().children().val().replace(/,/g, ''));
+        countAmountDetail(Qty, rate, $(this).parent().next().next().children());
+
+        $(this).val(addCommas(rate));
+    });
+
+    $(document).on('click', '.deleteDetail', function () {
+        var thisTr = $(this).closest('tr');
+        thisTr.find(".deleteAt").val("1");
+        $(this).closest('tr').css("display", "none");
+        recountTotal();
+    });
+
+    $(document).on('click', '.saveEdit', function () {
+        $(this).hide();
+        $(this).prev().show();
+
+        var thisTr = $(this).closest('tr');
+        thisTr.find(".rateDetailSave").attr("readonly", true);
+        thisTr.find(".qtyDetailSave").attr("readonly", true);
+
+        thisTr.find(".uomNameDetailSave").val(thisTr.find(".uomDetailSave option:selected").text());
+        thisTr.find(".uomIdDetailSave").val(thisTr.find(".uomDetailSave").val());
+        thisTr.find(".uomDetailSave").select2("destroy");
+        thisTr.find(".uomDetailSave").remove();
+        thisTr.find(".uomNameDetailSave").show();
+
+
+        recountTotal();
+    });
+
+    $(document).on('keypress', '#poNumberSearch', function (e) {
+        if (e.which == 13) {
+            if ($(this).val() == "") {
+                tablePo_PopUp.fnFilter($(this).val());
+            }
+            else if ($(this).val().length < 2) {
+                toastr.info('Please input, more than 2 digits');
+                return false;
+            }
+            else {
+                tablePo_PopUp.fnFilter($(this).val());
+            }
+        }
+    });
+
+    $(document).on('keypress', '#poPicSerach', function (e) {
+        if (e.which == 13) {
+            if ($(this).val() == "") {
+                tablePo_PopUp.fnFilter($(this).val());
+            }
+            else if ($(this).val().length < 2) {
+                toastr.info('Please input, more than 2 digits');
+                return false;
+            }
+            else {
+                tablePo_PopUp.fnFilter($(this).val());
+            }
+        }
+    });
+
+    function addCommas(nStr) {
+        nStr += '';
+        x1 = nStr.replace(/,/g, '')//.replace(/^0+/, '');
+        if (x1.length > 1) {
+            x1 = x1.replace(/^0+/, '');
+        }
+        // x = nStr.split('.');
+        // x1 = x[0];
+        //  x2 = x.length > 1 ? '.2' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1;// + x2;
+    }
+
+    function countAmountDetail(qty, rate, objDetailAmount) {
+        if ((rate * qty).toFixed(2) == 0) {
+            objDetailAmount.val("0");
+        }
+        else {
+            objDetailAmount.val(addCommas((rate * qty).toFixed(2)));
+        }
+    }
+
+    function recountTotal() {
+        var tax = parseFloat($("#percenTax").val().replace(/,/g, ''));
+        var subTotal = 0;
+        $('#tableHeadearinvoiceTable tr').each(function () {
+            if ($(this).css('display') != 'none') {
+                if (typeof $(this).find(".amountDetail").val() === "undefined") {
+
+                }
+                else {
+                    subTotal = subTotal + parseFloat($(this).find(".amountDetail").val().replace(/,/g, ''));
+                    countAmountTax(subTotal, tax);
+                }
+            }
+        });
+
+        $("#tdAmountSubtotal").text(addCommas(subTotal.toFixed(2)));
+        if (subTotal == 0) {
+            $("#tdAmountTax").text(addCommas(subTotal.toFixed(2)));
+            $("#tdAmountTotal").text(addCommas(subTotal.toFixed(2)));
+        }
+    }
+
+    function countAmountTax(subTotal, tax) {
+        var amountTax = (subTotal * (tax / 100)).toFixed(2);
+        var amountTotal = (subTotal - amountTax).toFixed(2);
+        $("#tdAmountTax").text(addCommas(amountTax));
+        $("#tdAmountTotal").text(addCommas(amountTotal));
+    }
+
+    function getDateToString(formattedDate) {
+        var d = formattedDate.getDate();
+        var m = formattedDate.getMonth();
+        m += 1;
+        var y = formattedDate.getFullYear();
+        var fotmatMonth = "";
+        if (m < 10) {
+            fotmatMonth = "0" + m + "";
+        }
+        else {
+            fotmatMonth = "" + m + "";
+        }
+
+        return y + "-" + fotmatMonth + "-" + d;
+    }
+
+    function checkIsToday(dateparam) {
+        console.log(dateparam);
+        if (dateparam == stringCurrenDate) {
+            $("#txtBoxinvoiceDate").val(dateparam);
+            toastr.warning('This Invoice Due is Immediately');
+        }
+    }
+</script>

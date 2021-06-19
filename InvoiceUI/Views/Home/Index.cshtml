@@ -1,0 +1,220 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Table Invoice</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-right" style="margin-bottom: 10px;">
+                            <div class="legend-block text-right">
+                                <a asp-action="Create" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> &nbsp; Add Invoice</a>
+                            </div>
+                        </div>
+                        <table id="tableHeadearinvoiceTable" style="float: left;table-layout:fixed;word-wrap:break-word" class="datatable table table-hover table-bordered">
+                            <thead class="bordered-blueberry">
+                                <tr>
+
+                                    <th style="width: 15%"><label>Customer Name</label></th>
+                                    <th style="width: 10%"><label>Invoice Date</label></th>
+                                    <th style="width: 10%"><label>Invoice No.</label></th>
+                                    <th style="width: 10%"><label>Purchase Order No.</label></th>
+                                    <th style="width: 10%"><label>Status</label></th>
+                                    <th style="width: 5%"><label></label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                       
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        <input id="InvoiceNumber" class="form-control" autocomplete="off" style="width:100%;" />
+                                    </td>
+                                    <td>
+                                        <input id="PurchaseOderNumber" class="form-control" autocomplete="off" style="width:100%;" />
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table id="invoiceTable" class="table table-bordered table-hover">
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        Footer
+                    </div>
+                    <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var tableIndexInvoice;
+
+    $(document).ready(function () {
+        $('#invoiceDate').datetimepicker({
+            todayHighlight: true,
+            format: 'yyyy-MM-DD',
+            autoclose: true
+        });
+
+        tableIndexInvoice = $('#invoiceTable').dataTable({
+            paging: true,
+            lengthChange: false,
+            searching: false,
+            ordering: false,
+            info: false,
+            autoWidth: false,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            language: {
+                processing: '<div class="spinner spinner-lg"></div>',
+                "zeroRecords": "No data available in table"
+            },
+            ajax: {
+                data: function (param) {
+                    param.param = JSON.stringify({
+                        InvoiceDate: null,
+                        InvoiceCode: $("#InvoiceNumber").val(),
+                        PurchaseOrderCode: $("#PurchaseOderNumber").val(),
+                    })
+                },
+                "url": "/Home/DataTableInvoice/",
+            },
+            columns:
+                [
+                    {
+                        name: 'CustomerName',
+                        data: 'customerName',
+                        width: "15%",
+                        sortable: false,
+                        searchable: false,
+                        defaultContent: '-',
+                        "render": function (data, type, row, full, meta) {
+                            var csName = "";
+                            if (data != null && data.length > 17) {
+                                csName = data.substring(0, 17) + "...";
+                            }
+                            else {
+                                csName = data;
+                            }
+                            return '<span data-toggle="tooltip" data-placement="left" title="' + data + '">' + csName + '</span>'
+                        }
+                    },
+                    {
+                        name: 'InvoiceDate',
+                        data: 'invoiceDate',
+                        width: "10%",
+                        sortable: false,
+                        searchable: false,
+                        "render": function (data, type, row, full, meta) {
+                            var formattedDate = new Date(data);
+                            var d = formattedDate.getDate();
+                            var m = formattedDate.getMonth();
+                            m += 1;
+                            var y = formattedDate.getFullYear();
+                            const monthNames = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"
+                            ];
+                            return '<span data-toggle="tooltip" data-placement="left">' + y + "-" + monthNames[m] + "-" + d + '</span>'
+                        }
+                    },
+                    {
+                        name: 'InvoiceNumber',
+                        data: 'invoiceNumber',
+                        width: "10%",
+                        sortable: false,
+                        searchable: false,
+                    },
+                    {
+                        name: 'PurchaseOrderNumber',
+                        data: 'purchaseOrderNumber',
+                        width: "10%",
+                        sortable: false,
+                        searchable: false,
+                    },
+                    {
+                        name: 'InvoiceStatus',
+                        data: 'invoiceStatus',
+                        width: "10%",
+                        sortable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'id',
+                        sortable: false,
+                        searchable: false,
+                        width: "5%",
+                        "render": function (data, type, row, full, meta) {
+                            return '<button type="button" data-id="' + data + '" class="btn btn-block bg-gradient-primary btnEditInvoice">Edit</button>';
+                        }
+                    }
+                ],
+            "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                $(nRow).attr('data-id', aData.id);
+                $(nRow).addClass('tr-' + aData.color);
+            },
+        });
+    });
+
+    $(document).on('click', '.btnEditInvoice', function () {
+        var idInvoice = $(this).data('id');
+        window.location.replace("/Home/Edit/" + idInvoice);
+    });
+
+    $(document).on('keypress', '#InvoiceNumber', function (e) {
+        if (e.which == 13) {
+            if ($(this).val() == "") {
+                tableIndexInvoice.fnFilter($(this).val());
+            }
+            else if ($(this).val().length < 2) {
+                toastr.info('Please input, more than 2 digits');
+                return false;
+            }
+            else {
+                tableIndexInvoice.fnFilter($(this).val());
+            }
+
+        }
+    });
+
+    $(document).on('keypress', '#PurchaseOderNumber', function (e) {
+        if (e.which == 13) {
+            if ($(this).val() == "") {
+                tableIndexInvoice.fnFilter($(this).val());
+            }
+            else if ($(this).val().length < 2) {
+                toastr.info('Please input, more than 2 digits');
+                return false;
+            }
+            else {
+                tableIndexInvoice.fnFilter($(this).val());
+            }
+
+        }
+    });
+
+   
+</script>
