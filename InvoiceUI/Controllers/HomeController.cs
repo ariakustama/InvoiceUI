@@ -236,6 +236,24 @@ namespace InvoiceUI.Controllers
                 return Json(new { error = true, errorMsg = ex.Message });
             }
         }
+        public async Task<JsonResult> deleteInvoice(string id)
+        {
+            try
+            {
+                ApiResult<InvoiceViewModel> apiResult = new ApiResult<InvoiceViewModel>();
+                string url = $"{_apiConfig.ApiUrl}{_apiAliasConfig.GetInvoice}/{id}";
+                apiResult = await _client.DeleteAsync<InvoiceViewModel>(url);
+
+                if (apiResult.isSuccessful)
+                    return Json(new { error = false,});
+                else
+                    return Json(new { error = true,errorMsg = apiResult.isSuccessful });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = true, errorMsg = ex.Message });
+            }
+        }
 
         public IActionResult Privacy()
         {
